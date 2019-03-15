@@ -14,7 +14,7 @@ class IssueFilter extends React.Component {
 //         console.log("count");
 //         return (
 //             <tr>
-//               <td>{issue.id}</td>  
+//               <td>{issue._id}</td>  
 //               <td>{issue.status}</td>
 //               <td>{issue.owner}</td>
 //               <td>{issue.created.toDateString()}</td>
@@ -30,7 +30,7 @@ class IssueFilter extends React.Component {
 
 const IssueRow = props => (
     <tr>
-        <td>{props.issue.id}</td>  
+        <td>{props.issue._id}</td>  
         <td>{props.issue.status}</td>
         <td>{props.issue.owner}</td>
         <td>{props.issue.created.toDateString()}</td>
@@ -43,7 +43,7 @@ const IssueRow = props => (
 
 // class IssueTable extends React.Component {
 //     render() {
-//         const issueRows = this.props.issues.map(issue => <IssueRow key={issue.id} issue={issue} />)
+//         const issueRows = this.props.issues.map(issue => <IssueRow key={issue._id} issue={issue} />)
 //         return (
 //             <table className="bordered-table">
 //                 <thead>
@@ -66,7 +66,7 @@ const IssueRow = props => (
 // }
 
 const IssueTable = (props) => {
-    const issueRows = props.issues.map(issue => <IssueRow key={issue.id} issue={issue} />)
+    const issueRows = props.issues.map(issue => <IssueRow key={issue._id} issue={issue} />)
     return (
         <table className="bordered-table">
             <thead>
@@ -185,17 +185,25 @@ class IssueList extends React.Component {
 
     loadData() {
         fetch('/api/issues')
-        .then(response => response.json())
-        .then(data => {
-            console.log("Total count of records: ", data._metadata.total_count);
+        .then(response => {
+            if(response.ok) {
+                response.json()
+                .then(data => {
+                    console.log("Total count of records: ", data._metadata.total_count);
             
-            data.records.forEach(issue => {
-                issue.created = new Date(issue.created);
-                if(issue.completionDate) {
-                    issue.completionDate = new Date(issue.completionDate);
-                }
-            });
-            this.setState({issues:data.records});
+                    data.records.forEach(issue => {
+                        issue.created = new Date(issue.created);
+                        if(issue.completionDate) {
+                            issue.completionDate = new Date(issue.completionDate);
+                        }
+                    });
+                    this.setState({issues:data.records});
+                });
+            } else {
+                response.json().then(error =>{
+                    alert("Failed to fetch issues:" + error.message);
+                });
+            }
         })
         .catch(err => {
             console.log(err);
