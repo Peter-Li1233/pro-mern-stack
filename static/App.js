@@ -2,6 +2,12 @@
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _IssueAdd = require("./IssueAdd.js");
+
+var _IssueAdd2 = _interopRequireDefault(_IssueAdd);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -210,36 +216,32 @@ var IssueTable = function IssueTable(props) {
 //     }
 // }
 
-function IssueAdd(props) {
-    function handleSubmit(e) {
-        e.preventDefault();
-        var form = document.forms.issueAdd;
-        props.createIssue({
-            owner: form.owner.value,
-            title: form.title.value,
-            status: 'New',
-            created: new Date()
-        });
+// function IssueAdd(props) {
+//     function handleSubmit(e) {
+//         e.preventDefault();
+//         var form = document.forms.issueAdd;
+//         props.createIssue({
+//             owner:form.owner.value,
+//             title:form.title.value,
+//             status:'New',
+//             created:new Date(),
+//         });
 
-        form.owner.value = '';
-        form.title.value = '';
-    }
-    return React.createElement(
-        "div",
-        null,
-        React.createElement(
-            "form",
-            { name: "issueAdd", onSubmit: handleSubmit },
-            React.createElement("input", { type: "text", name: "owner", placeholder: "Owner" }),
-            React.createElement("input", { type: "text", name: "title", placeholder: "Title" }),
-            React.createElement(
-                "button",
-                null,
-                "Add"
-            )
-        )
-    );
-}
+//         form.owner.value='';
+//         form.title.value='';
+
+//     }
+//     return (
+//         <div>
+//             <form name="issueAdd" onSubmit={handleSubmit}>
+//                 <input type='text' name='owner' placeholder="Owner" />
+//                 <input type='text' name='title' placeholder="Title" />
+//                 <button>Add</button>
+//             </form>
+//         </div>
+//     );
+
+// }
 
 var IssueList = function (_React$Component2) {
     _inherits(IssueList, _React$Component2);
@@ -329,7 +331,7 @@ var IssueList = function (_React$Component2) {
                 React.createElement("hr", null),
                 React.createElement(IssueTable, { issues: this.state.issues }),
                 React.createElement("hr", null),
-                React.createElement(IssueAdd, { createIssue: this.createIssue })
+                React.createElement(_IssueAdd2.default, { createIssue: this.createIssue })
             );
         }
     }]);

@@ -1,42 +1,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
-
-const validIssueStatus = {
-    New: true,
-    Open: true,
-    Assigned: true,
-    Fixed: true,
-    Verified: true,
-    Closed: true,
-};
-
-const issueFieldType = {
-    id: 'required',
-    status: 'required',
-    owner: 'required',
-    effort: 'optional',
-    created: 'required',
-    completionDate: 'optional',
-    title: 'required',
-}
-
-function validateIssue(issue) {
-    for (const field in issue) {
-        const type = issueFieldType[field];
-        if(!type) {
-            delete issue[field]
-        } else if (type === 'required' && !issue[field]) {
-            return `${field} is required.`;
-        }
-    }
-
-    if(!validIssueStatus[issue.status]) {
-        return `${issue.status} is not a valid status`;
-    }
-
-    return null
-}
+const Issue = require('./issue');
 
 const app = express();
 app.use(express.static('static'));
@@ -65,7 +30,7 @@ app.post('/api/issues', (req, res) => {
         newIssue.status = "New";
     };
 
-    const err = validateIssue(newIssue);
+    const err = Issue.validateIssue(newIssue);
     if(err) {
         res.status(422).json({message: `Invalid request: ${err}`});
         return;
