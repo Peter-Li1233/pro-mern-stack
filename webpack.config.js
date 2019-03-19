@@ -1,4 +1,3 @@
-const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
@@ -9,14 +8,14 @@ module.exports = {
     },
     output: {
         path: path.resolve(__dirname, 'static'),
-        filename: 'app.bundle.js'
+        filename: '[name].bundle.js'
     },
     optimization: {
         splitChunks: {
             cacheGroups: {
                 commons: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: "vendors",
+                    name: "vendor",
                     chunks: "all"
                 }
             }
