@@ -1,12 +1,27 @@
+const webpack = require('webpack');
 const path = require('path');
 
 module.exports = {
     mode: 'development',
-    entry: './src/App.jsx',
+    entry: {
+        app: './src/App.jsx',
+        vendor: ['react', 'react-dom', 'whatwg-fetch']
+    },
     output: {
         path: path.resolve(__dirname, 'static'),
         filename: 'app.bundle.js'
     },
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: "vendors",
+                    chunks: "all"
+                }
+            }
+        }
+      },
 
     module: {
         rules: [
