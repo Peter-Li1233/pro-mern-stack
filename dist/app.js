@@ -6,11 +6,11 @@ var _bodyParser = _interopRequireDefault(require("body-parser"));
 
 var _mongodb = require("mongodb");
 
-var _issue = _interopRequireDefault(require("./issue"));
-
 require("babel-polyfill");
 
 var _sourceMapSupport = _interopRequireDefault(require("source-map-support"));
+
+var _issue = _interopRequireDefault(require("./issue"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -57,10 +57,8 @@ app.post('/api/issues', function (req, res) {
   newIssue.created = new Date();
 
   if (!newIssue.status) {
-    newIssue.status = "New";
+    newIssue.status = 'New';
   }
-
-  ;
 
   var err = _issue.default.validateIssue(newIssue);
 
@@ -71,7 +69,7 @@ app.post('/api/issues', function (req, res) {
     return;
   }
 
-  db.collection('issues').insertOne(newIssue).then(function (result) {
+  db.collection('issues').insertOne(_issue.default.cleanupIssue(newIssue)).then(function (result) {
     return db.collection('issues').find({
       _id: result.insertedId
     }).limit(1).next();
@@ -85,7 +83,8 @@ app.post('/api/issues', function (req, res) {
     });
   });
 });
-var db, client;
+var db;
+var client;
 
 _mongodb.MongoClient.connect('mongodb://localhost', {
   useNewUrlParser: true
