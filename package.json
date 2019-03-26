@@ -11,10 +11,7 @@
     "compile": "webpack",
     "watch": "webpack-dev-server --hot --inline",
     "dev-all": "npm run watch && npm run watch-server && npm run start",
-<<<<<<< HEAD
-=======
     "lint": "eslint --ext js,jsx src server webpack.config.js",
->>>>>>> ff7698783c0042875fadba04c3119e80966bcc88
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
