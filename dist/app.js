@@ -35,7 +35,10 @@ app.use(_bodyParser.default.json()); // console.log(process.env.NODE_ENV);
 // }
 
 app.get('/api/issues', function (req, res) {
-  db.collection('issues').find().toArray().then(function (issues) {
+  console.log(req);
+  var filter = {};
+  if (req.query.status) filter.status = req.query.status;
+  db.collection('issues').find(filter).toArray().then(function (issues) {
     var metadata = {
       total_count: issues.length
     };

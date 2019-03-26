@@ -5,6 +5,8 @@ import 'whatwg-fetch';
 import IssueAdd from './IssueAdd.jsx';
 import IssueFilter from './IssueFilter.jsx';
 
+import PropTypes from 'prop-types';
+
 
 // class IssueRow extends React.Component {
 //     render() {
@@ -124,7 +126,7 @@ export default class IssueList extends React.Component {
     }
 
     loadData() {
-        fetch('/api/issues')
+        fetch(`/api/issues${this.props.location.search}`)
         .then(response => {
             if(response.ok) {
                 response.json()
@@ -155,6 +157,17 @@ export default class IssueList extends React.Component {
         this.loadData();
     }
 
+    componentDidUpdate(prevProps) {
+        const oldQuery = prevProps.location.search;
+        const newQuery = this.props.location.search;
+        console.log(this.props);
+        if (oldQuery === newQuery) {
+            return;
+        }
+
+        this.loadData();
+    }
+
     render() {
         return (
             <div>
@@ -167,4 +180,8 @@ export default class IssueList extends React.Component {
             </div>
         );
     }
+}
+
+IssueList.propTypes = {
+    location: PropTypes.object.isRequired,
 }
