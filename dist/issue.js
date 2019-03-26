@@ -13,7 +13,6 @@ var validIssueStatus = {
   Closed: true
 };
 var issueFieldType = {
-  id: 'required',
   status: 'required',
   owner: 'required',
   effort: 'optional',
@@ -22,25 +21,33 @@ var issueFieldType = {
   title: 'required'
 };
 
-function validateIssue(issue) {
-  for (var field in issue) {
-    var type = issueFieldType[field];
-
-    if (!type) {
-      delete issue[field];
-    } else if (type === 'required' && !issue[field]) {
-      return "".concat(field, " is required.");
+function cleanupIssue(issue) {
+  var cleanedUpIssue = {};
+  Object.keys(issue).forEach(function (field) {
+    if (issueFieldType[field]) {
+      cleanedUpIssue[field] = issue[field];
     }
-  }
+  });
+  return cleanedUpIssue;
+}
+
+function validateIssue(issue) {
+  var errors = [];
+  Object.keys(issueFieldType).forEach(function (field) {
+    if (issueFieldType[field] === 'required' && !issue[field]) {
+      errors.push("Missing Mandatory field: ".concat(field));
+    }
+  });
 
   if (!validIssueStatus[issue.status]) {
-    return "".concat(issue.status, " is not a valid status");
+    errors.push("".concat(issue.status, " is not a valid status"));
   }
 
-  return null;
+  return errors.length ? errors.join(';') : null;
 }
 
 var _default = {
+  cleanupIssue: cleanupIssue,
   validateIssue: validateIssue
 };
 exports.default = _default;
