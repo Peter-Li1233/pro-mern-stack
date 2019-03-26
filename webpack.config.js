@@ -4,7 +4,7 @@ module.exports = {
     mode: 'development',
     entry: {
         app: ['./src/App.jsx'],
-        vendor: ['react', 'react-dom', 'whatwg-fetch']
+        vendor: ['react', 'react-dom', 'react-router-dom', 'whatwg-fetch']
     },
     output: {
         path: path.resolve(__dirname, 'static'),
