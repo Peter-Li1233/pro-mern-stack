@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import 'whatwg-fetch';
@@ -29,18 +30,21 @@ import PropTypes from 'prop-types';
 // }
 
 const IssueRow = props => (
-    <tr>
-        <td><Link to={`/issues/${props.issue._id}`}>
-          {props.issue._id.substr(-4)} 
-        </Link></td>  
-        <td>{props.issue.status}</td>
-        <td>{props.issue.owner}</td>
-        <td>{props.issue.created.toDateString()}</td>
-        <td>{props.issue.effort}</td>
-        <td>{props.issue.completionDate? 
-        props.issue.completionDate.toDateString(): ''}</td>
-        <td>{props.issue.title}</td>
-    </tr>
+  <tr>
+    <td>
+      <Link to={`/issues/${props.issue._id}`}>
+        {props.issue._id.substr(-4)} 
+      </Link>
+    </td>
+    <td>{props.issue.status}</td>
+    <td>{props.issue.owner}</td>
+    <td>{props.issue.created.toDateString()}</td>
+    <td>{props.issue.effort}</td>
+    <td>
+      {props.issue.completionDate? props.issue.completionDate.toDateString(): ''}
+    </td>
+    <td>{props.issue.title}</td>
+  </tr>
 )
 
 // class IssueTable extends React.Component {
@@ -70,87 +74,31 @@ const IssueRow = props => (
 const IssueTable = (props) => {
     const issueRows = props.issues.map(issue => <IssueRow key={issue._id} issue={issue} />)
     return (
-        <table className="bordered-table">
-            <thead>
-                <tr>
-                    <th>Id</th>
-                    <th>Status</th>
-                    <th>Owner</th>
-                    <th>Created</th>
-                    <th>Effort</th>
-                    <th>Completion Date</th>
-                    <th>title</th>
-                </tr>
-            </thead>
-            <tbody>
-                {issueRows}
-            </tbody>
-        </table>
+      <table className="bordered-table">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Status</th>
+            <th>Owner</th>
+            <th>Created</th>
+            <th>Effort</th>
+            <th>Completion Date</th>
+            <th>title</th>
+          </tr>
+        </thead>
+        <tbody>
+          {issueRows}
+        </tbody>
+      </table>
     );
-}
+};
 
 export default class IssueList extends React.Component {
     constructor() {
         super();
-        this.state = {issues: []};
+        this.state = { issues: [] };
         this.createIssue = this.createIssue.bind(this);
-    }
-
-    createIssue(newIssue) {
-        fetch('/api/issues', {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify(newIssue),
-        })
-        .then(response => {
-          if(response.ok) {
-            response.json()
-            .then(newIssue => {
-                newIssue.created = new Date(newIssue.created);
-                if(newIssue.completionDate) {
-                    newIssue.completionDate = new Date(newIssue.completionDate);
-                };
-                const newIssues = this.state.issues.concat(newIssue);
-                this.setState({issues:newIssues});
-            }); 
-         } else {
-             response.json().then(error => {
-                 alert("Failed to add issue: " + error.message);
-             });
-         }
-        })
-        .catch(err => {
-            console.log(err);
-        });
-        
-    }
-
-    loadData() {
-        fetch(`/api/issues${this.props.location.search}`)
-        .then(response => {
-            if(response.ok) {
-                response.json()
-                .then(data => {
-                    console.log("Total count of records: ", data._metadata.total_count);
-            
-                    data.records.forEach(issue => {
-                        issue.created = new Date(issue.created);
-                        if(issue.completionDate) {
-                            issue.completionDate = new Date(issue.completionDate);
-                        }
-                    });
-                    this.setState({issues:data.records});
-                });
-            } else {
-                response.json().then(error =>{
-                    alert("Failed to fetch issues:" + error.message);
-                });
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        });
-        
+        this.setFilter = this.setFilter.bind(this);
     }
 
     componentDidMount() {
@@ -160,6 +108,7 @@ export default class IssueList extends React.Component {
     componentDidUpdate(prevProps) {
         const oldQuery = prevProps.location.search;
         const newQuery = this.props.location.search;
+        // eslint-disable-next-line no-console
         console.log(this.props);
         if (oldQuery === newQuery) {
             return;
@@ -168,20 +117,80 @@ export default class IssueList extends React.Component {
         this.loadData();
     }
 
+    setFilter(query) {
+      this.props.history.push({ pathname: this.props.location.pathname, search: query });
+    }
+
+    createIssue(newIssue) {
+        fetch('/api/issues', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newIssue),
+        })
+        .then((response) => {
+          if (response.ok) {
+            response.json()
+            .then((newIssue) => {
+                newIssue.created = new Date(newIssue.created);
+                if (newIssue.completionDate) {
+                    newIssue.completionDate = new Date(newIssue.completionDate);
+                }
+                const newIssues = this.state.issues.concat(newIssue);
+                this.setState({ issues: newIssues });
+            });
+         } else {
+             response.json().then((error) => {
+                 alert(`Failed to add issue: ${error.message}`);
+             });
+         }
+        })
+        .catch((err) => {
+            // eslint-disable-next-line no-console
+            console.log(err);
+        });
+    }
+
+    loadData() {
+        fetch(`/api/issues${this.props.location.search}`)
+        .then((response) => {
+            if (response.ok) {
+                response.json()
+                .then((data) => {
+                    // eslint-disable-next-line no-console
+                    console.log('Total count of records: ', data._metadata.total_count);
+                    data.records.forEach((issue) => {
+                        issue.created = new Date(issue.created);
+                        if (issue.completionDate) {
+                            issue.completionDate = new Date(issue.completionDate);
+                        }
+                    });
+                    this.setState({ issues: data.records });
+                });
+            } else {
+                response.json().then((error) => {
+                    alert(`Failed to fetch issues: ${error.message}`);
+                });
+            }
+        })
+        .catch((err) => {
+            // eslint-disable-next-line no-console
+            console.log(err);
+        });
+    }
+
     render() {
         return (
-            <div>
-                <h1>Issue Tracker</h1>
-                <IssueFilter />
-                <hr />
-                <IssueTable  issues={this.state.issues}/>
-                <hr />
-                <IssueAdd createIssue={this.createIssue} />
-            </div>
+          <div>
+            <IssueFilter setFilter={this.setFilter} />
+            <hr />
+            <IssueTable issues={this.state.issues} />
+            <hr />
+            <IssueAdd createIssue={this.createIssue} />
+          </div>
         );
     }
 }
 
 IssueList.propTypes = {
     location: PropTypes.object.isRequired,
-}
+};

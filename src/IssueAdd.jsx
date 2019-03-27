@@ -22,6 +22,7 @@ export default class IssueAdd extends React.Component {
     }
     render() {
         console.log("renders again...");
+        console.log(this.props);
         return (
             <div>
                 <form name="issueAdd" onSubmit={this.handleSubmit}>
