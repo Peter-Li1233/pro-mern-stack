@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom';
 import {
   HashRouter,
   Route,
+  Switch,
 } from 'react-router-dom';
 
 import IssueList from './IssueList.jsx';
@@ -17,22 +18,35 @@ import IssueEdit from './IssueEdit.jsx';
 const destination = document.getElementById('container');
 const NoMatch = () => <p>Page Not Found</p>;
 
-const App = (props) => (
-  <div>
-    <div className="header">
-      <h1>Issue Tracker</h1>
+const App = (props) => {
+  // eslint-disable-next-line no-console
+  console.log(props);
+  return (
+    <div>
+      <div className="header">
+        <h1>Issue Tracker</h1>
+      </div>
+      <RouteNestedApp />
+      <div className="footer">
+        Full source code available at this 
+        <a href="https://github.com/Peter-Li1233/pro-mern-stack">
+         GitHub repository
+        </a>
+      </div>
     </div>
-    <div className="contents">
-      {props.children}
-    </div>
-    <div className="footer">
-     Full source code available at this 
-      <a href="https://github.com/Peter-Li1233/pro-mern-stack">
-     GitHub repository
-      </a>
-    </div>
-  </div>
+ );
+};
+
+const RouteNestedApp = () => (
+  <HashRouter>
+   <Switch>
+   <Route exact path="/issues" component={IssueList} />
+   <Route exact path="/issues/:id" component={IssueEdit} />
+   <Route component={NoMatch} />
+   </Switch>
+  </HashRouter>
 );
+
 
 // App.propTypes = {
 //   // eslint-disable-next-line react/forbid-prop-types
@@ -42,10 +56,12 @@ const App = (props) => (
 const RouteApp = () => (
   <HashRouter>
     {/* <Redirect from="/" to="/issues" /> */}
-    <Route path="/" compoenent={App}>
+    <Route path="/" component={App}>
+    {/* <div>
       <Route path="/issues" component={IssueList} />
       <Route path="/issues/:id" component={IssueEdit} />
       <Route path="*" component={NoMatch} />
+    </div> */}
     </Route>
   </HashRouter>
 );
