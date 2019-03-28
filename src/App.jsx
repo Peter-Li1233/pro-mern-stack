@@ -7,7 +7,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {
-  HashRouter,
+  BrowserRouter,
+  Redirect,
   Route,
   Switch,
 } from 'react-router-dom';
@@ -28,23 +29,21 @@ const App = (props) => {
       </div>
       <RouteNestedApp />
       <div className="footer">
-        Full source code available at this 
-        <a href="https://github.com/Peter-Li1233/pro-mern-stack">
-         GitHub repository
-        </a>
+        Full source code available at this
+        <a href="https://github.com/Peter-Li1233/pro-mern-stack">GitHub repository</a>
       </div>
     </div>
  );
 };
 
 const RouteNestedApp = () => (
-  <HashRouter>
-   <Switch>
-   <Route exact path="/issues" component={IssueList} />
-   <Route exact path="/issues/:id" component={IssueEdit} />
-   <Route component={NoMatch} />
-   </Switch>
-  </HashRouter>
+  <BrowserRouter>
+    <Switch>
+      <Route exact path="/issues" component={IssueList} />
+      <Route exact path="/issues/:id" component={IssueEdit} />
+      <Route component={NoMatch} />
+    </Switch>
+  </BrowserRouter>
 );
 
 
@@ -54,16 +53,16 @@ const RouteNestedApp = () => (
 // };
 
 const RouteApp = () => (
-  <HashRouter>
-    {/* <Redirect from="/" to="/issues" /> */}
+  <BrowserRouter>
+    {/* <Redirect exact from="/" to="/issues" /> */}
     <Route path="/" component={App}>
-    {/* <div>
+      {/* <div>
       <Route path="/issues" component={IssueList} />
       <Route path="/issues/:id" component={IssueEdit} />
       <Route path="*" component={NoMatch} />
     </div> */}
     </Route>
-  </HashRouter>
+  </BrowserRouter>
 );
 
 ReactDOM.render(<RouteApp />, destination);

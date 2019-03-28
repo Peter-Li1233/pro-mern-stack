@@ -94,17 +94,20 @@ const IssueTable = (props) => {
 };
 
 export default class IssueList extends React.Component {
+
     constructor() {
         super();
+        this._isMounted = false;
         this.state = { issues: [] };
         this.createIssue = this.createIssue.bind(this);
         this.setFilter = this.setFilter.bind(this);
     }
 
     componentDidMount() {
-        this.loadData();
+        this._isMounted = true;
+        if (this._isMounted) this.loadData();
     }
-
+   
     componentDidUpdate(prevProps) {
         const oldQuery = prevProps.location.search;
         const newQuery = this.props.location.search;
@@ -113,9 +116,13 @@ export default class IssueList extends React.Component {
         if (oldQuery === newQuery) {
             return;
         }
-
-        this.loadData();
+        if (this._isMounted) this.loadData();
     }
+    
+    componentWillUnmount() {
+      this._isMounted = false;
+    }
+
 
     setFilter(query) {
       this.props.history.push({ pathname: this.props.location.pathname, search: query });

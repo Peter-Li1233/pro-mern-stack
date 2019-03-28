@@ -10,6 +10,8 @@ require("babel-polyfill");
 
 var _sourceMapSupport = _interopRequireDefault(require("source-map-support"));
 
+var _path = _interopRequireDefault(require("path"));
+
 var _issue = _interopRequireDefault(require("./issue"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -85,6 +87,9 @@ app.post('/api/issues', function (req, res) {
       message: "Internal Server Error: ".concat(err)
     });
   });
+});
+app.get('*', function (req, res) {
+  res.sendFile(_path.default.resolve('static/index.html'));
 });
 var db;
 var client;

@@ -7,7 +7,10 @@ import bodyParser from 'body-parser';
 import { MongoClient } from 'mongodb';
 import 'babel-polyfill';
 import SourceMapSupport from 'source-map-support';
+import path from 'path';
+
 import Issue from './issue';
+
 
 SourceMapSupport.install();
 
@@ -70,7 +73,11 @@ app.post('/api/issues', (req, res) => {
       console.log(err);
       res.status(500).json({message: `Internal Server Error: ${err}`});
     });
-})
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('static/index.html'));
+});
 
 let db;
 let client;

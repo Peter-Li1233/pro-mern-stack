@@ -27,9 +27,10 @@ module.exports = {
         contentBase: 'static',
         proxy: {
             '/api/*': {
-                target: 'http://localhost:3000'
-            }
-        }
+                target: 'http://localhost:3000',
+            },
+        },
+        historyApiFallback: true,
     },
     
     devtool: 'source-map',
